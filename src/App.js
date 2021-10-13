@@ -40,6 +40,8 @@ class BooksApp extends React.Component {
   }
 
 
+  // Part of the handle change component below comes from ideas found on the help forum
+
   handleChange = (event) => {
     event.preventDefault();
     const query = event.target.value;
