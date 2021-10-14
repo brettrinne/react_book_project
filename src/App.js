@@ -11,6 +11,7 @@ import SearchResults from './SearchResults'
 class BooksApp extends React.Component {
   state = {
     books: {},
+    searchBooks: {},
     query: ''
   }
 
@@ -50,18 +51,27 @@ class BooksApp extends React.Component {
     }));
     if (query.length > 0) {
       BooksAPI.search(query.trim()).then((books) => {
-        this.setState(() => ({
-          books,
-        }));
+        if (books === undefined) {
+          this.setState(() => ({
+            searchBooks: [],
+          }));
+        }
+        else if ('error' in books) {
+          this.setState(() => ({
+            searchBooks: [],
+          }));
+        }
+        else {
+          this.setState(() => ({
+            searchBooks: books,
+          }));
+        }
       })
     }
     else {
-      BooksAPI.getAll()
-        .then((books) => {
-          this.setState(() => ({
-            books
-          }))
-        })
+      this.setState(() => ({
+        searchBooks: [],
+      }));
     }
 
   };
@@ -72,7 +82,7 @@ class BooksApp extends React.Component {
 
 
   render() {
-    const { books, query } = this.state
+    const { books, searchBooks, query } = this.state
 
     return (
       <div className="app">
@@ -87,7 +97,7 @@ class BooksApp extends React.Component {
 
               </div>
             </div>
-            <SearchResults updateSelect={this.updateSelect} books={books} query={query} />
+            <SearchResults updateSelect={this.updateSelect} books={searchBooks} query={query} />
           </div>
         )} />
         <Route exact path='/' render={({ history }) => (
@@ -99,15 +109,15 @@ class BooksApp extends React.Component {
               <div>
                 <div className="bookshelf">
                   <h2 className="bookshelf-title">Currently Reading</h2>
-                  <Book key='currentlyReading' books={this.state.books} shelf={'currentlyReading'} updateSelect={this.updateSelect} />
+                  <Book key='currentlyReading' books={books} shelf={'currentlyReading'} updateSelect={this.updateSelect} />
                 </div>
                 <div className="bookshelf">
                   <h2 className="bookshelf-title">Want to Read</h2>
-                  <Book key='wantToRead' books={this.state.books} shelf={'wantToRead'} updateSelect={this.updateSelect} />
+                  <Book key='wantToRead' books={books} shelf={'wantToRead'} updateSelect={this.updateSelect} />
                 </div>
                 <div className="bookshelf">
                   <h2 className="bookshelf-title">Read</h2>
-                  <Book key='read' books={this.state.books} shelf={'read'} updateSelect={this.updateSelect} />
+                  <Book key='read' books={books} shelf={'read'} updateSelect={this.updateSelect} />
                 </div>
               </div>
             </div>

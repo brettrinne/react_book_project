@@ -53,10 +53,7 @@ class Book extends Component {
                                     <div className="book-title">{book.title}</div>
                                     {
                                         book.authors !== undefined &&
-                                        book.authors.map((author) => (
-                                            <div key={author} className="book-authors">{author}</div>
-                                        ))
-
+                                        <div key={book.authors.join(',')} className="book-authors">{book.authors.join(',')}</div>
                                     }
                                 </div>
                             </li>
