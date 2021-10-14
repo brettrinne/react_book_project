@@ -51,6 +51,8 @@ class BooksApp extends React.Component {
     }));
     if (query.length > 0) {
       BooksAPI.search(query.trim()).then((books) => {
+        console.log(books)
+        console.log(this.state.books)
         if (books === undefined) {
           this.setState(() => ({
             searchBooks: [],
@@ -62,6 +64,7 @@ class BooksApp extends React.Component {
           }));
         }
         else {
+          books = books.map(obj => this.state.books.find(o => o.id === obj.id) || obj);
           this.setState(() => ({
             searchBooks: books,
           }));
